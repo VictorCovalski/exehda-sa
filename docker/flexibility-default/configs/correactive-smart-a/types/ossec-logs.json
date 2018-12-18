@@ -1,0 +1,17 @@
+{
+    "@cr_type": "String", 
+    "@timestamp": "String", 
+    "@version": "String", 
+    "action": "String", 
+    "command": "String", 
+    "count": "Long", 
+    "geoip": "MAP", 
+    "host": "String", 
+    "logtimestamp": "String", 
+    "message": "String", 
+    "offset": "Long", 
+    "source": "String", 
+    "src_ip": "String", 
+    "tags": "array", 
+    "type": "String"
+}

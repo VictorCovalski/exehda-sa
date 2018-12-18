@@ -1,0 +1,83 @@
+# This file is where you define your pipelines. You can define multiple.
+# For more information on multiple pipelines, see the documentation:
+#   https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
+
+- pipeline.id: syslog
+  path.config: "/usr/share/logstash/pipeline/syslog.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: apache
+  path.config: "/usr/share/logstash/pipeline/apache.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: ubnt
+  path.config: "/usr/share/logstash/pipeline/ubnt.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: ap-syslog
+  path.config: "/usr/share/logstash/pipeline/ap-syslog.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: auth
+  path.config: "/usr/share/logstash/pipeline/auth.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: bitdef
+  path.config: "/usr/share/logstash/pipeline/bitdefender.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: bro
+  path.config: "/usr/share/logstash/pipeline/bro-ids.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: firewall
+  path.config: "/usr/share/logstash/pipeline/firewall.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: modsec
+  path.config: "/usr/share/logstash/pipeline/modsecurity.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: nginx
+  path.config: "/usr/share/logstash/pipeline/nginx.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: openvas
+  path.config: "/usr/share/logstash/pipeline/openvas.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: ossec
+  path.config: "/usr/share/logstash/pipeline/ossec.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: squid
+  path.config: "/usr/share/logstash/pipeline/squid.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: suricata
+  path.config: "/usr/share/logstash/pipeline/suricata.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: switches
+  path.config: "/usr/share/logstash/pipeline/switches.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+
+- pipeline.id: webmail
+  path.config: "/usr/share/logstash/pipeline/webmail.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500

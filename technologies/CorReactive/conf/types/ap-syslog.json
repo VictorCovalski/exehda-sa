@@ -1,0 +1,13 @@
+{
+    "@timestamp": "String", 
+    "@version": "String", 
+    "ap_ssid": "String", 
+    "count": "Long", 
+    "geoip": "MAP", 
+    "host": "String", 
+    "message": "String", 
+    "offset": "Long", 
+    "program": "String", 
+    "source": "String", 
+    "type": "String"
+}

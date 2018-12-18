@@ -1,0 +1,2 @@
+#BROIDS
+BROWEIRD \A%{NUMBER:timestamp}%{SPACE}%{NOTSPACE:uid}%{SPACE}%{IP:src_ip}%{SPACE}%{POSINT:src_port}%{SPACE}%{IP:dst_ip}%{SPACE}%{POSINT:dst_port}%{SPACE}%{NOTSPACE:name}%{SPACE}%{NOTSPACE:addl}%{SPACE}%{NOTSPACE:notice}%{SPACE}%{NOTSPACE:peer}

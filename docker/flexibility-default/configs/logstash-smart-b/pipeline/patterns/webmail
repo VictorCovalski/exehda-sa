@@ -1,0 +1,5 @@
+# Webmail
+WEBMAILTIMESTAMP \S+ \S+ \S+
+MAIL_LOGIN %{NOTSPACE} %{NOTSPACE:auth} login for %{NOTSPACE:user} (\(ID: %{NOTSPACE}\) )?from %{IP:ip} in session %{NOTSPACE}
+MAIL_SENT %{NOTSPACE} User %{NOTSPACE:user} \[%{NOTSPACE:ip}\]; Message for %{GREEDYDATA:recipient}; %{NUMBER:code}%{GREEDYDATA} as %{NOTSPACE:queue}
+MAIL_PASS_CHANGE %{NOTSPACE} Password changed for user %{NOTSPACE:user} \(ID: %{NUMBER:id}\) from %{NOTSPACE:ip}

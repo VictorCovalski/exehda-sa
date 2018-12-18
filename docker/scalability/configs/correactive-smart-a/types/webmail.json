@@ -1,0 +1,21 @@
+{
+    "@cr_type": "String", 
+    "@timestamp": "String", 
+    "@version": "String", 
+    "auth": "String", 
+    "code": "String", 
+    "count": "Long", 
+    "geoip": "MAP", 
+    "host": "String", 
+    "id": "String", 
+    "ip": "String", 
+    "logtimestamp": "String", 
+    "message": "String", 
+    "offset": "Long", 
+    "queue": "String", 
+    "recipient": "String", 
+    "source": "String", 
+    "tags": "array", 
+    "type": "String", 
+    "user": "String"
+}

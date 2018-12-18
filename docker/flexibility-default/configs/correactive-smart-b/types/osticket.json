@@ -1,0 +1,20 @@
+{
+    "@timestamp": "String", 
+    "@version": "String", 
+    "assigned": "String", 
+    "body": "String", 
+    "client_ip": "String", 
+    "department_name": "String", 
+    "geoip": "MAP", 
+    "isoverdue": "Boolean", 
+    "local2": "String", 
+    "logtimestamp": "String", 
+    "priority": "String", 
+    "source_request": "String", 
+    "subject": "String", 
+    "ticket_id": "Long", 
+    "topic": "String", 
+    "type": "String", 
+    "user_address": "String", 
+    "user_name": "String"
+}

@@ -1,0 +1,2 @@
+# Squid
+SQUID %{NUMBER:timestamp}\s+%{NUMBER:response_time} %{IP:src_ip} (:?|%{NOTSPACE:src_mac})\s*%{WORD:squid_request_status}/%{NUMBER:http_status_code} %{NUMBER:reply_size_include_header}\s*(:?|%{NOTSPACE:http_method})\s*(:?|(%{WORD:http_protocol}://%{HOSTNAME:dst_host}%{NOTSPACE:request_url})|%{NOTSPACE:request_url}) %{NOTSPACE:user} %{WORD:squid}/(?:-|%{IP:dst_ip}|%{NOTSPACE}) %{NOTSPACE:content_type}\s*("%{GREEDYDATA:agent}")?

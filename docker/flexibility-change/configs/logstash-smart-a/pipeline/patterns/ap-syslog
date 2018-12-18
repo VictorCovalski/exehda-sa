@@ -1,0 +1,3 @@
+APSYSLOG %{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:ap}\s*(?:%{SYSLOGPROG}:)? \[%{LOGLEVEL:severity}\] src=%{IP:src_ip}\s*%{GREEDYDATA:ap_message}
+APDHCP %{WORD:dhcp_request}\(%{NOTSPACE:iface}\) %{IP:client_ip} %{COMMONMAC:client_mac}( %{NOTSPACE:client_device})?
+APWIRELESS %{NOTSPACE:iface}\s*Sending deauth to %{COMMONMAC:client_mac}. Reason: %{GREEDYDATA:reason}.

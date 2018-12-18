@@ -1,0 +1,2 @@
+# POSTGREY
+POSTGREY action=%{NOTSPACE:action}, reason=%{DATA:reason}( \(%{NUMBER:sec_miss:int}s missing\))?,( delay=%{NUMBER:delay:int},)? client_name=%{NOTSPACE:client_name}, client_address=%{IP:src_ip},( sender=%{NOTSPACE:sender},)? recipient=%{NOTSPACE:receiver}

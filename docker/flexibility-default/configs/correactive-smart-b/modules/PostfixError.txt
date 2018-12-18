@@ -1,0 +1,9 @@
+module PostfixError;
+
+@Name('PostfixError')
+@Alert(name='PostfixError',outID=1)
+@Enrich(dst="alert_severity",type="cmd",param="echo High")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+SELECT Arrays.asList(window(*)) as events FROM postfix(program="postfix/error").win:length(5)
+group by host
+output first every 5 min;

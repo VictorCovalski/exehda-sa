@@ -1,0 +1,191 @@
+version: '3'
+services:
+  redis-smart-a:
+    container_name: smartlogger-a-redis
+    image: redis:latest
+    command: redis-server --save '' --bind 0.0.0.0 --maxmemory 768m --maxmemory-policy allkeys-lru
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  redis-smart-b:
+    container_name: smartlogger-b-redis
+    image: redis:latest
+    command: redis-server --save '' --bind 0.0.0.0 --maxmemory 768m --maxmemory-policy allkeys-lru
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  logstash-generator-infraA:
+    image: docker.elastic.co/logstash/logstash:6.5.2
+    container_name: generator-infraA
+    volumes:
+      - ./configs/generator-infraA/pipeline/:/usr/share/logstash/pipeline/
+      - ./configs/generator-infraA/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    environment:
+      - "xpack.monitoring.enabled=false"
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    depends_on:
+      - redis-smart-a
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  logstash-generator-infraB:
+    image: docker.elastic.co/logstash/logstash:6.5.2
+    container_name: generator-infraB
+    volumes:
+      - ./configs/generator-infraB/pipeline/:/usr/share/logstash/pipeline/
+      - ./configs/generator-infraB/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    environment:
+      - 'xpack.monitoring.enabled=false'
+      - 'LS_JAVA_OPTS=-Xmx256m -Xms256m'
+    depends_on:
+      - redis-smart-b
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  logstash-smart-a-1:
+    image: docker.elastic.co/logstash/logstash:6.5.2
+    container_name: smartlogger-a-logstash
+    volumes:
+      - ./configs/logstash-smart-a/pipeline/:/usr/share/logstash/pipeline/
+      - ./configs/logstash-smart-a/pipeline/patterns/:/usr/share/logstash/pipeline/patterns/
+      - ./configs/logstash-smart-a/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    environment:
+      - 'xpack.monitoring.enabled=true'
+      - 'xpack.monitoring.elasticsearch.url=["http://elasticsearch:9200"]'
+      - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
+    depends_on:
+      - redis-smart-a
+      - correactive-smart-a-1
+      - elasticsearch
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '2g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  logstash-smart-b:
+    image: docker.elastic.co/logstash/logstash:6.5.2
+    container_name: smartlogger-b-logstash
+    volumes:
+      - ./configs/logstash-smart-b/pipeline/:/usr/share/logstash/pipeline/
+      - ./configs/logstash-smart-b/pipeline/patterns/:/usr/share/logstash/pipeline/patterns/
+      - ./configs/logstash-smart-b/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    environment:
+      - 'xpack.monitoring.enabled=true'
+      - 'xpack.monitoring.elasticsearch.url=["http://elasticsearch:9200"]'
+      - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
+    depends_on:
+      - redis-smart-b
+      - correactive-smart-b
+      - elasticsearch
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '2g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  correactive-smart-a-1:
+    image: victorjunes/correactive
+    container_name: smartlogger-a-1-correactive
+    volumes:
+      - ./configs/correactive-smart-a/:/correactive/conf
+      - ./configs/correactive-smart-a/bin/log4j.xml:/correactive/bin/log4j.xml
+    depends_on:
+      - redis-smart-a-1
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  correactive-smart-b:
+    image: victorjunes/correactive
+    container_name: smartlogger-b-correactive
+    volumes:
+      - ./configs/correactive-smart-b/:/correactive/conf
+      - ./configs/correactive-smart-b/bin/log4j.xml:/correactive/bin/log4j.xml
+    depends_on:
+      - redis-smart-b
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.2
+    environment:
+      SERVER_NAME: 200.17.161.194
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1g'
+        reservations:
+          cpus: '0.25'
+          memory: '128m'
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.2
+    container_name: elasticsearch
+    environment:
+      - 'bootstrap.memory_lock=true'
+      - 'xpack.monitoring.collection.enabled=true'
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: '4g'
+        reservations:
+          cpus: '1'
+          memory: '512m'
+
+volumes:
+  esdata1:
+    driver: local
+

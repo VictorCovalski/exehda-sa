@@ -1,0 +1,10 @@
+module ApacheDoS;
+
+@Name('ApacheDoS')
+@Alert(name='ApacheDoS',outID=1)
+@Enrich(dst="alert_severity",type="cmd",param="echo High")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+select window(*) as events from apache2(errormsg="scoreboard is full, not at MaxRequestWorkers").win:time(10 min)
+group by host
+having count(*) >= 1
+output first every 5 min;

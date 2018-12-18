@@ -1,0 +1,10 @@
+{
+  '@timestamp':'String',
+  'timestamp':'String',    
+  'type':'String',
+  '_id':'String',
+  'host':'String',
+  'program':'String',
+  'message':'String',  
+  'tags':'array'
+}

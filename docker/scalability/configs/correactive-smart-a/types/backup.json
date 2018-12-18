@@ -1,0 +1,13 @@
+{
+    "@cr_type": "String", 
+    "@timestamp": "String", 
+    "@version": "String", 
+    "count": "Long", 
+    "geoip": "MAP", 
+    "host": "String", 
+    "message": "String", 
+    "offset": "Long", 
+    "source": "String", 
+    "tags": "array", 
+    "type": "String"
+}

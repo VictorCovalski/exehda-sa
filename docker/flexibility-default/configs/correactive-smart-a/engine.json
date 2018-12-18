@@ -1,0 +1,29 @@
+{	
+	"inputs":[
+		{
+			"type": "redis",
+			"config":{ 
+				"host": redis-smart-a,
+				"port": 6379,
+				"db": 0,
+				"queue":"events-smart-a-1",
+				"batch_count":500,
+				"reconnect_timeout":30
+			}
+		}
+	],
+	"outputs":[
+		{
+			"type":"redis",
+			"id":1,
+			"config":{
+				"host": redis-smart-a,
+				"queue":"alerts",
+				"port": 6379,
+				"db": 0,
+				"reconnect_timeout":30,
+				"batch_count":1
+			}
+		}
+	]
+}

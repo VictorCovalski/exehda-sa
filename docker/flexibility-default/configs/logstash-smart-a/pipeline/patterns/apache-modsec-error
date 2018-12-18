@@ -1,0 +1,18 @@
+# ModSec Patterns apache2/error.log
+MODSECPREFIX ModSecurity: ((%{NOTSPACE:modsecseverity}\.|%{DATA:response_code}\.) (?:%{DATA:errormsg}\. )?)|(%{DATA:errormsg} (?=\[))
+MODSECRULEFILE \[file "%{NOTSPACE:rulefile}"\]
+MODSECRULELINE \[line "%{POSINT:ruleline:int}"\]
+MODSECRULEID \[id "%{NOTSPACE:ruleid:int}"\]
+MODSECRULEREV \[rev "%{NOTSPACE:rulerev}"\]
+MODSECRULEMSG \[msg "%{DATA:rulemessage}"\]
+MODSECRULEDATA \[data "%{DATA:ruledata}"\]
+MODSECRULESEVERITY \[severity "%{NOTSPACE:ruleseverity}"\]
+MODSECRULEVERSION \[ver "%{NOTSPACE:ruleversion}"\]
+MODSECRULEMATURITY \[maturity "%{NOTSPACE:rulematurity:int}"\]
+MODSECRULEACCURACY \[accuracy "%{NOTSPACE:ruleaccuracy:int}"\]
+MODSECRULETAG (\[tag "%{NOTSPACE:ruletags}"\] )
+MODSECHOSTNAME \[hostname "%{HOSTNAME:targethost}"\]
+MODSECURI \[uri "%{NOTSPACE:targeturi}"\]
+MODSECUID \[unique_id "%{NOTSPACE:uniqueid}"\]
+
+MODSECAPACHEERROR %{MODSECPREFIX}(?:%{MODSECRULEFILE} )?(?:%{MODSECRULELINE} )?(?:%{MODSECRULEID} )?(?:%{MODSECRULEREV} )?(?:%{MODSECRULEMSG} )?(?:%{MODSECRULEDATA} )?(?:%{MODSECRULESEVERITY} )?(?:%{MODSECRULEVERSION} )?(?:%{MODSECRULEMATURITY} )?(?:%{MODSECRULEACCURACY} )?(%{MODSECRULETAG})*%{MODSECHOSTNAME}\s*%{MODSECURI}\s*%{MODSECUID}

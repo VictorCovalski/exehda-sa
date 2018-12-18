@@ -1,0 +1,12 @@
+{
+  '@timestamp':'String',
+  'timestamp':'String',    
+  'type':'String',
+  'src_ip':'String',
+  'src_port':'Integer',
+  'dst_ip':'String',
+  'dst_port':'Integer',
+  'protocol':'String',
+  'message':'String',  
+  'tags':'array'
+}

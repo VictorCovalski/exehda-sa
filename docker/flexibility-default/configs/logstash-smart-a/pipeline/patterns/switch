@@ -1,0 +1,2 @@
+# SWITCHES
+SWITCHES %{SYSLOGTIMESTAMP:timestamp} %{NOTSPACE:sw_name} \[%{LOGLEVEL:severity}\] src=%{IP:src_ip} %{GREEDYDATA:sw_msg}

@@ -1,0 +1,9 @@
+module Interface100Mbps;
+
+@Name('Interface100Mbps')
+@Alert(name='Interface100Mbps',outID=1)
+@Enrich(dst="alert_severity",type="cmd",param="echo High")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+select * from syslog(message LIKE "%NIC Copper Link is Up, 100 Mbps%")
+group by host
+output first every 5 min;

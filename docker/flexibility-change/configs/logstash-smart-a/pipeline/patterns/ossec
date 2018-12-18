@@ -1,0 +1,15 @@
+# OSSEC - alerts.log
+OSSECALERT AV - Alert - "%{NUMBER:timestamp}" --> RID: "%{POSINT:rule_id:int}"; RL: "%{POSINT:rule_level:int}"; RG: "%{DATA:rule_group}"; RC: "%{DATA:rule_comment}"; USER: "(%{DATA:user}|\(no user\))"; SRCIP: "(%{IP:src_ip}|%{HOSTNAME:src_hostname}|None)"; HOSTNAME: "(%{HOSTNAME:hostname}|\(%{HOSTNAME:hostname}\) %{IP}->(%{PATH}|%{NOTSPACE}|%{DATA}))"; LOCATION: "(%{PATH:location}|%{NOTSPACE:location}|\(%{HOSTNAME}\) %{IP}->(%{PATH:location}|%{NOTSPACE:location}|%{DATA:rule_message}))"; EVENT: "\[INIT\]%{DATA:event}\[END\]";
+
+# OSSEC - active-response.log
+# Qui Dez 8 11:22:53 BRST 2016 /var/ossec/active-response/bin/firewall-drop.sh delete - 123.123.123.123 (from_the_server) (no_rule_id)
+ALERTID %{POSINT}.%{POSINT}
+MONTHBR \w\w\w
+SYSLOGTIMESTAMPBR %{MONTHBR} +%{MONTHDAY} %{TIME}
+OSSECTIME %{NOTSPACE} %{WORD:month}\s+%{NUMBER:dom} %{NOTSPACE:time} %{WORD} %{NUMBER:year}
+OSSECACTIVERESP %{OSSECTIME} %{NOTSPACE:command} %{WORD:action} (%{WORD:username}|-) %{IP:src_ip} (%{ALERTID:alert_id:int}|\(from_the_server\)) (%{NUMBER:rule_id:int}|\(no_rule_id\))
+
+# OSSEC - ossec.log
+# 2018/06/15 09:52:20 ossec-agentd: INFO: Event count after '20000': 6415326->5215504 (81%)
+OSSECTIMEO %{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{TIME}
+OSSECLOGS %{OSSECTIMEO:timestamp} %{PROG:program}: %{GREEDYDATA:ossec_msg}

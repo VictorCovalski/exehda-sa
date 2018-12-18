@@ -1,0 +1,13 @@
+# Apache (access.log)
+COMMONAPACHELOGCUSTOM (%{IPORHOST:src_ip}|-) %{HTTPDUSER:ident} (%{USER:auth}|"") \[%{HTTPDATE:timestamp}\] "(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})" %{NUMBER:response} (?:%{NUMBER:bytes:int}|-)
+COMBINEDAPACHELOGCUSTOM %{COMMONAPACHELOGCUSTOM}( ("(?:%{URI:referrer}|-)"|%{QS:referrer}) ("%{GREEDYDATA:agent}; %{URI:referrer}"|"%{GREEDYDATA:agent}"))?
+
+# Apache (error.log)
+MILLISEC \.[0-9]+
+APACHE_ERROR_TIME %{DAY} %{MONTH} %{MONTHDAY} %{TIME}(:?|%{MILLISEC}) %{YEAR}
+APACHE_ERROR_PREFIX \[%{APACHE_ERROR_TIME:timestamp}\] \[(:?|%{WORD:module})(:?|:)%{LOGLEVEL:loglevel}\]\s*(:?|(\[pid %{POSINT:pid:int}\]))\s*(?:\[client %{IPORHOST:src_ip}(:?|:%{POSINT:dst_port:int})\])?
+APACHE_ERROR_LOG (:?|%{DATA:errorcode}:) %{GREEDYDATA:errormsg}
+
+# Apache (rewrite.log)
+REWRITEDATE %{MONTHDAY}/%{MONTH}/%{YEAR}:%{TIME} -%{INT}
+APACHEREWRITE (%{IPORHOST:src_ip}|-) %{HTTPDUSER:ident} (%{USER:auth}|"") \[%{REWRITEDATE:timestamp}\] %{GREEDYDATA:rewritemsg}

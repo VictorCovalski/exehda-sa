@@ -1,0 +1,11 @@
+module ApacheWebScan;
+
+@Name('ApacheWebScan')
+@Alert(name='ApacheWebScan',outID=1)
+@Enrich(dst="alert_severity",type="cmd",param="echo High")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+SELECT window(*) as events FROM apache(
+	response!="200").win:time(1 sec)
+GROUP BY src_ip
+HAVING COUNT(*) >= 10
+OUTPUT FIRST EVERY 5 min;

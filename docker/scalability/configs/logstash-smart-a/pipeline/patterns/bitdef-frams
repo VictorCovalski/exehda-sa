@@ -1,0 +1,6 @@
+# Bitdefender FRAMS (spam.log)
+BD_TIMESTAMP \S+ \S+
+BD_SPAM \A%{BD_TIMESTAMP:timestamp} BDMAILD SPAM: sender: %{DATA:sender}, recipients: %{NOTSPACE:recipient}, sender IP: %{IP:src_ip}, subject: \"%{DATA:subject}\"(, message-id: \"<%{NOTSPACE:message-id}>\", , score: %{NUMBER:score})?
+
+# cf.log
+BD_CF \A%{BD_TIMESTAMP:timestamp} BDMAILD CONTENTFILTER: sender: %{DATA:sender}, recipients: %{NOTSPACE:receiver}, subject: \'%{DATA:subject}\', header recipients: \(%{DATA:header_recipients}\), CF rule: %{NUMBER:rule_id} %{DATA:rule_description}, CF action: %{DATA:action},
