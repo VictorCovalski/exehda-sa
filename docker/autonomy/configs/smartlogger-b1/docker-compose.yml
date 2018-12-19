@@ -1,0 +1,60 @@
+version: '2'
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    command: redis-server --save '' --bind 0.0.0.0 --maxmemory 768m --maxmemory-policy allkeys-lru
+
+  correactive:
+    image: victorjunes/correactive
+    container_name: correactive
+    volumes:
+      - ./configs/correactive-smart-a/:/correactive/conf
+      - ./configs/correactive-smart-a/bin/log4j.xml:/correactive/bin/log4j.xml
+    depends_on:
+      - redis
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.5.2
+    container_name: logstash
+    volumes:
+      - ./configs/logstash/pipeline/:/usr/share/logstash/pipeline/
+      - ./configs/logstash/pipeline/patterns/:/usr/share/logstash/pipeline/patterns/
+      - ./configs/logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    environment:
+      - 'xpack.monitoring.enabled=true'
+      - 'xpack.monitoring.elasticsearch.url=["http://elasticsearch:9200"]'
+      - 'http.host=0.0.0.0'
+      - 'LS_JAVA_OPTS=-Xmx2g -Xms2g -XX:ParallelGCThreads=2'
+    depends_on:
+      - redis
+      - correactive
+      - elasticsearch
+    ports:
+      - 5044:5044
+      - 9600:9600 #for monitoring purposes
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.2
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.2
+    container_name: elasticsearch
+    environment:
+      - 'bootstrap.memory_lock=true'
+      - 'xpack.monitoring.collection.enabled=true'
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+
+volumes:
+  esdata1:
+    driver: local

@@ -1,0 +1,10 @@
+module POPBruteforce;
+
+@Name('POPBruteforce')
+@Alert(name='POPBruteforce',outID=1)
+@Enrich(dst="alert_severity",type="cmd",param="echo Low")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+select window(*),Arrays.toString(window(dst_ip)) as dst_ip,src_ip from suricata(alert("signature").toString() in ("PROTOCOL-POP login brute force attempt", "ET SCAN Rapid POP3 Connections - Possible Brute Force Attack", "ET SCAN Rapid POP3S Connections - Possible Brute Force Attack")).win:time(10 min)
+group by src_ip
+having count(*) >= 5
+output first every 15 min;

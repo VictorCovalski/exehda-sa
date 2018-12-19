@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # Base Virtual Machine Image
+  # https://app.vagrantup.com/minimum/boxes/ubuntu-trusty64-docker
+  config.vm.box = "bugmark/packaged_docker"
+  config.vm.box_version = "0.0.1"
+  
+  # Installs Docker Community Edition
+ # config.vm.provision "shell", path: "./setup/docker-install.sh"
+  # Copies SmartLogger configuration files to both machines
+  config.vm.provision "file", source: "./configs/smartlogger-b1/", destination: "/home/vagrant/configs"
+  
+  # SmartLogger-A Definition
+  config.vm.define "SmartLogger-B1" do |smartb|
+    smartb.vm.hostname = "SmartLogger-B1"
+    smartb.vm.network "private_network", ip: "10.1.1.2"
+    smartb.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.cpus   = "2"
+    end
+
+  # Deploy SmartLoggerB-1 stack
+  smartb.vm.provision "shell", path: "./setup/run-exehda.sh"
+  end
+  
+  # SmartLogger-B Definition
+  config.vm.define "Node-B1" do |node|
+    node.vm.hostname = "Node-B1"
+    node.vm.network "private_network", ip: "10.1.1.3"
+    node.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.cpus   = "2"
+    end
+    
+  # Installs Filebeat (Collector module)
+  node.vm.provision "shell", path: "./setup/filebeat-install.sh"
+  
+  # Copies Node specific configuration files
+  node.vm.provision "file", source: "./configs/node1/", destination: "/home/vagrant/configs"
+  end
+end

@@ -1,0 +1,10 @@
+module IMAPBruteforce;
+
+@Name('IMAPBruteforce')
+@Alert(name='IMAPBruteforce',outID=1)
+@Enrich(dst="alert_severity",type="cmd",param="echo Low")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+select window(*) as events,Arrays.toString(window(dst_ip)) as dst_ip_list,src_ip from suricata(alert("signature").toString() in ("ET SCAN Rapid IMAPS Connections - Possible Brute Force Attack", "ET SCAN Rapid IMAP Connections - Possible Brute Force Attack")).win:time(10 min)
+group by src_ip
+having count(*) >= 5
+output first every 5 min;
