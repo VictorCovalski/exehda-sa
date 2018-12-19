@@ -151,7 +151,6 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:6.5.2
     environment:
-      SERVER_NAME: 200.17.161.194
       ELASTICSEARCH_URL: http://elasticsearch:9200
     depends_on:
       - elasticsearch
