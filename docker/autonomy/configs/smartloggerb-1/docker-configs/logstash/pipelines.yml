@@ -1,0 +1,5 @@
+- pipeline.id: firewall
+  path.config: "/usr/share/logstash/pipeline/firewall.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 500
+

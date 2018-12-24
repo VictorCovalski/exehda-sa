@@ -2,42 +2,48 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  # Base Virtual Machine Image
-  # https://app.vagrantup.com/minimum/boxes/ubuntu-trusty64-docker
   config.vm.box = "bugmark/packaged_docker"
   config.vm.box_version = "0.0.1"
   
-  # Installs Docker Community Edition
- # config.vm.provision "shell", path: "./setup/docker-install.sh"
-  # Copies SmartLogger configuration files to both machines
-  config.vm.provision "file", source: "./configs/smartlogger-b1/", destination: "/home/vagrant/configs"
-  
-  # SmartLogger-A Definition
-  config.vm.define "SmartLogger-B1" do |smartb|
-    smartb.vm.hostname = "SmartLogger-B1"
+  # SmartLoggerB-1 Definition
+  config.vm.define "smartloggerb-1" do |smartb|
+    smartb.vm.hostname = "smartloggerb-1"
     smartb.vm.network "private_network", ip: "10.1.1.2"
     smartb.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
       vb.cpus   = "2"
     end
 
-  # Deploy SmartLoggerB-1 stack
-  smartb.vm.provision "shell", path: "./setup/run-exehda.sh"
+    # Copies SmartLogger configuration files to SmartLoggerB-1
+    smartb.vm.provision "file", source: "./configs/smartloggerb-1/", destination: "/home/vagrant/configs"
+
+    # Deploy SmartLoggerB-1 stack
+    smartb.vm.provision "shell", path: "./setup/run-exehda.sh"
   end
   
-  # SmartLogger-B Definition
-  config.vm.define "Node-B1" do |node|
-    node.vm.hostname = "Node-B1"
+  # Collector-Node Definition
+  config.vm.define "collectorb-1" do |node|
+    node.vm.hostname = "collectorb-1"
     node.vm.network "private_network", ip: "10.1.1.3"
     node.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
       vb.cpus   = "2"
     end
     
-  # Installs Filebeat (Collector module)
-  node.vm.provision "shell", path: "./setup/filebeat-install.sh"
+    # Installs Filebeat (Collector module) as a Perception module
+    node.vm.provision "shell", path: "./setup/filebeat-install.sh"
   
-  # Copies Node specific configuration files
-  node.vm.provision "file", source: "./configs/node1/", destination: "/home/vagrant/configs"
+    # Copies Collector configuration files to CollectorB-1
+    node.vm.provision "file", source: "./configs/collectorb-1/", destination: "/home/vagrant/configs"
+
+    # Deploy docker environment for Pre-processing, Comprehension and Projection modules
+    node.vm.provision "shell", path: "./setup/run-exehda.sh"
+
+    # Configures firewall, filebeat/perception and projection
+    node.vm.provision "shell" do |s|
+      s.inline = "chown root /home/vagrant/configs/actions/firewall-drop.sh; chmod u+s /home/vagrant/configs/actions/firewall-drop.sh; mkdir -p /etc/iptables/; cp /home/vagrant/configs/firewall/firewall /etc/iptables/; cp /home/vagrant/configs/firewall/rc.local /etc/; chmod +x /etc/rc.local; chmod +x /etc/iptables/firewall; /etc/iptables/firewall; cp /home/vagrant/configs/filebeat/filebeat-local.yml /etc/filebeat/filebeat.yml; service filebeat restart"
+      s.privileged = true
+    end
+
   end
 end

@@ -2,5 +2,6 @@ filebeat.inputs:
   - type: log
     paths: 
     - /var/log/syslog
+    include_lines: ['Firewall']
 output.logstash:
   hosts: ["10.1.1.2:5044"]

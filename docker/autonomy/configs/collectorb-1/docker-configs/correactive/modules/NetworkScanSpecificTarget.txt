@@ -1,0 +1,13 @@
+module NetworkScanSpecificTarget;
+
+@Alert(name='NetworkScanSpecificTarget',outID=1)
+@Name('NetworkScanSpecificTarget')
+@Enrich(dst="alert_severity",type="cmd",param="echo Low")
+@Enrich(dst="alert_type",type="cmd",param="echo Network")
+@Enrich(dst="action",type="cmd",param="bash /correactive/conf/actions/firewall-drop-remote.sh %{src_ip} %{dst_ip}")
+
+SELECT src_ip, dst_ip, window(dst_port) as dst_port_list 
+	FROM firewall().win:time(1 min)
+GROUP BY src_ip
+HAVING COUNT (distinct dst_port)>4
+OUTPUT FIRST every 5 min;

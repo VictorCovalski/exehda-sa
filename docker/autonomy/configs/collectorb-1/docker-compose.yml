@@ -1,0 +1,34 @@
+version: '2'
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    command: redis-server --save '' --bind 0.0.0.0 --maxmemory 768m --maxmemory-policy allkeys-lru
+
+  correactive:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: correactive
+    volumes:
+      - ./docker-configs/correactive/:/correactive/conf
+      - ./docker-configs/correactive/bin/log4j.xml:/correactive/bin/log4j.xml
+    depends_on:
+      - redis
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.5.2
+    container_name: logstash
+    volumes:
+      - ./docker-configs/logstash/pipeline/:/usr/share/logstash/pipeline/
+      - ./docker-configs/logstash/pipeline/patterns/:/usr/share/logstash/pipeline/patterns/
+      - ./docker-configs/logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    environment:
+      - 'xpack.monitoring.enabled=false'
+      - 'http.host=0.0.0.0'
+      - 'LS_JAVA_OPTS=-Xmx2g -Xms2g -XX:ParallelGCThreads=2'
+    depends_on:
+      - redis
+      - correactive
+    ports:
+      - 5044:5044

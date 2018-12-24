@@ -14,7 +14,7 @@
    <appender name="default.file" class="org.apache.log4j.FileAppender">
         <param name="file" value="/var/log/correactive/correactive.log" />
         <param name="append" value="true" />
-        <param name="threshold" value="error" />
+        <param name="threshold" value="DEBUG" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
         </layout>

@@ -17,6 +17,15 @@ docker stack deploy -c docker-stack.yml stack_name
 ```
 Please wait a minute or two for the setup process before going to the next steps. (Logstash has a slow boot time). If necessary, it is possible to use the 'docker logs' command to fetch the logs of a container.
 
+This repository also provides through Vagrant technology an environment to validate the autonomy demand.
+
+## TL;DR
+```
+git clone https://github.com/VictorCovalski/exehda-sa.git
+cd exehda-sa/docker/autonomy
+vagrant up
+```
+After the first minutes related to the boot time, it's possible to stop the smartloggerb-1 node through the command "vagrant halt smartloggerb-1" and execute a port scan attack using the Nmap tool to verify the autonomy of the collectorb-1 node.
 
 ## Environment Description
 
@@ -28,7 +37,9 @@ scalability (docker-stack-horizontal.yml) - SmartLogger-A with all modules enabl
 
 scalability (docker-stack-vertical.yml) - SmartLogger-A with two nodes (A-1 and A-2) and SmartLogger-B only forwarding events. 
 
-Each case study is working with the generator logstash plugin. 
+autonomy - SmartLogger-B and Collector-B with all modules enabled.
+
+Each case study is working with the generator logstash plugin, except the autonomy which will generate firewall events when detecting an attempt to access a blocked port. 
 
 If desired, the user can enable the http logstash input plugin and adjust the ports mapping through docker-stack.yml to ingest desired events.
 
@@ -60,12 +71,15 @@ python3 event-pusher.py "http://localhost:8082/" sample
 ## Instructions for docker installation
 
 [Install Docker](https://docs.docker.com/install/)
+[Install Vagrant](https://www.vagrantup.com/docs/installation/)
 
 ## Technologies used
 
 *Docker 18.06.1-ce* for creating the environment.
 
 *Logstash 6.4.0* for parsing logs and adding needed metadata.
+
+*Vagrant 2.2.2* for building and managing virtual machine environments (specially used for autonomy demand).
 
 *CorReactive 0.1a* for correlating security events and issuing alerts.
 

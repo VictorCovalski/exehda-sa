@@ -1,0 +1,21 @@
+# Clean INPUT and DROP policy
+iptables -F INPUT
+iptables -P INPUT DROP -t filter
+
+# State
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i lo -s 127.0.0.1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# Loopback
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -s 127.0.0.1 -j ACCEPT
+
+
+# ICMP
+iptables -A INPUT -p icmp -j ACCEPT
+
+# SSH
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# LOG
+iptables -A INPUT -j LOG --log-prefix "Firewall:input:DROP:"
