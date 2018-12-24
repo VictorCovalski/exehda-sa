@@ -71,6 +71,7 @@ python3 event-pusher.py "http://localhost:8082/" sample
 ## Instructions for docker installation
 
 [Install Docker](https://docs.docker.com/install/)
+
 [Install Vagrant](https://www.vagrantup.com/docs/installation/)
 
 ## Technologies used
